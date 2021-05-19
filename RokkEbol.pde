@@ -31,6 +31,7 @@ void setup() {
   rokkEbol = new RokkEbolVibes(new String[] {" The", "Black", "Keys", "", "I Got", "Mine"}); // track 4
   rokkEbol = new RokkEbolVibes(new String[] {"РЕМОНТ", "ОБУВИ", "КОПИR", "КЛЮЧЕЙ"});
   //rokkEbol.setWaveVector(500, 0);
+  //rokkEbol.setWaveAmplitude(3);
 }
 
 int time = 0;
@@ -46,15 +47,17 @@ void draw() {
   
   // sample of whole scene rotation:
   //translate beggining in left upper corner
-  // translate(width / 2, height / 2);
-  // rotateZ(time / 80.0);
-  // translate(- width / 2, - height / 2);
+  //translate(width / 2, height / 2);
+  //rotateZ(time / 80.0);
+  //translate(- width / 2, - height / 2);
   // image(bg, 0, 0, width, height);
   
   // you can change rokkebol parameters dynamically
   // rokkEbol.setWaveAmplitude((int)(100 * sin(2 * PI * time / 360)));
   // rokkEbol.setWaveCycleTicks((int)(100 * abs(sin(2 * PI * time / 360))) + 10);
   // draw rokkebol
+  rokkEbol.setWaveAmplitude((int)(3 + 30 * loudness));
+  rokkEbol.setWaveCycleTicks((int)(45 - 30 * loudness));
   rokkEbol.draw();
   time++;
   // save frame
