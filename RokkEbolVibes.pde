@@ -1,21 +1,50 @@
 class RokkEbolVibes {
-  PFont f;
-  final String[] rokk = {"РЕМОНТ", "ОБУВИ", "КОПИR", "КЛЮЧЕЙ"};
-  int tick = 0;
-  int fontSize = height / 12;
-  int step = (int) (fontSize * 1.277777777);
-  int rex = (width - step * (rokk.length - 1)) / 2;
-  int rey = (height - step * 5) / 2;
-  int rez = 100;
+  private final double STEP_TO_FONTSIZE_RATIO = 1.277777777; // ratio of font size and gap between letters
+  
+  private PFont f;
+  private String[] rokk; // array of strings to render
+  // this fields are calculated to center the text array 'rokk' in the center of the screen:
+  private int fontSize;
+  private int step;
+  private int rex;
+  private int rey;
+  // this is depth of scene:
+  private int rez = 100;
+  
+  private int tick = 0;
   
   // add simple ripple to letters
-  int waveX = 225; // wave X component
-  int waveY = 127; // wave Y component
-  int waveSq = waveX * waveX + waveY * waveY;
-  int amplZ = 15; // wave Z amplitude
-  int waveCycleTicks = 45; // amount of ticks for complete wave cycle
+  private int waveX = 225; // wave X component
+  private int waveY = 127; // wave Y component
+  private int waveSq = waveX * waveX + waveY * waveY; // precalculated square
+  private int amplZ = 15; // wave Z amplitude
+  private int waveCycleTicks = 45; // amount of ticks for complete wave cycle
+  
+  public void setWaveVector(int x, int y) {
+    waveX = x;
+    waveY = y;
+    waveSq = waveX * waveX + waveY * waveY;
+  }
 
-  public RokkEbolVibes() {
+  public void setWaveAmplitude(int amplitude) {
+    amplZ = amplitude;
+  }
+  public void setWaveCycleTicks(int ticks) {
+    waveCycleTicks = ticks;
+  }
+  
+  public RokkEbolVibes(String[] text) {
+    rokk = text;
+    int m = text[0].length();
+    for (int i = 0; i < text.length; i++) {
+      if (text[i].length() > m) {
+        m = text[i].length();
+      }
+    }
+    fontSize = height / (2 * m);
+    step = (int) (fontSize * STEP_TO_FONTSIZE_RATIO);
+    rex = (width - step * (rokk.length - 1)) / 2;
+    rey = (height - step * (m - 1)) / 2;
     // upload font
     // printArray(PFont.list()); // uncomment to get whole list of available fonts
     f = createFont("Ponter-X.ttf", fontSize);
@@ -35,16 +64,22 @@ class RokkEbolVibes {
         int yLattice = step * i;
         // calculate ticks offset
         int xyLatticeRegularizer = 30; // regularization constant, needed for zero'th element
-        float epochs = sqrt((float)(((double)xLattice + xyLatticeRegularizer) * waveX + (yLattice + xyLatticeRegularizer) * waveY)/waveSq);
-        epochs = epochs - floor(epochs);
-        int ticksOffset = (tick + (int)(epochs * waveCycleTicks)) % waveCycleTicks;
-        float factor = sin(2 * PI * ticksOffset / (float)waveCycleTicks);
-        float coFactor = cos(2 * PI * ticksOffset / (float)waveCycleTicks);
+        float epochs = 0, ticksOffset = tick;
+        float factor = 0.0, coFactor = 0.0;
+        if (waveSq != 0) { // has waves
+          epochs = sqrt((float)(((double)xLattice + xyLatticeRegularizer) * waveX + (yLattice + xyLatticeRegularizer) * waveY)/waveSq);
+          epochs = epochs - floor(epochs);
+          ticksOffset = (tick + (int)(epochs * waveCycleTicks)) % waveCycleTicks;
+          factor = sin(2 * PI * ticksOffset / (float)waveCycleTicks);
+          coFactor = cos(2 * PI * ticksOffset / (float)waveCycleTicks);
+        }
         
         pushMatrix();
         translate(rex + xLattice, rey + yLattice, (int)(rez + factor * amplZ));
-        rotateX((float)coFactor * PI/24 * waveX / sqrt(waveSq));
-        rotateY((float)coFactor * PI/24 * waveY / sqrt(waveSq));
+        if (waveSq != 0) {
+          rotateY((float)coFactor * PI/24 * waveX / sqrt(waveSq));
+          rotateX((float)coFactor * PI/36 * waveY / sqrt(waveSq));
+        }
         text(line.charAt(i), 0, 0);
         popMatrix();
       }
