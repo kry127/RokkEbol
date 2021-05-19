@@ -48,9 +48,9 @@ void setup() {
   rokkEbol = new RokkEbolVibes(new String[] {"РЕМОНТ", "ОБУВИ", "КОПИR", "КЛЮЧЕЙ"});
   // do not forget to update strategy
   //newStrategy();
-  strategy = new SoundReactiveAndRotatingRokkEbolSceneStrategy(rokkEbol, fft);
-  //background = new FadingBackgroundSceneStrategy();
-  background = new MatrixBackgroundSceneStrategy(new int[] {25, 50, 100}, 0, -200);
+  strategy = new StaticRokkEbolSceneStrategy(rokkEbol);
+  background = new FadingBackgroundSceneStrategy();
+  //background = new MatrixBackgroundSceneStrategy(new int[] {25, 50, 100}, 0, -200);
   background.setGreyAlpha(0, 24);
 }
 
