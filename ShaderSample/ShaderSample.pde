@@ -17,9 +17,9 @@ long tick = 0;
 void draw() {
   hueOffset = (tick % 100) / 100.0;
   cIm = 1.5*sin(2 * PI * (tick % 150) / 150.0);
-  shader(julia);
   julia.set("hueOffset", hueOffset);
   julia.set("cIm", cIm);
+  shader(julia);
   background(0);
   rect(0, 0, width, height);
   tick++;

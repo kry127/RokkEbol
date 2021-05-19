@@ -2,7 +2,7 @@
 // this pattern binds various inputs (e.g. sound level or specific sound event) to
 // scene controls
 interface ReactiveSceneStrategy {
-  void draw(int globalTick);
+  void draw(long globalTick);
 }
 
 ///// FOREGROUNDS
@@ -19,7 +19,7 @@ class StaticRokkEbolSceneStrategy implements ReactiveSceneStrategy {
     this.scene.setWaveAmplitude(30);
   }
   
-  void draw(int globalTick) {
+  void draw(long globalTick) {
     // just static drawing strategy
     this.scene.draw();
   }
@@ -36,7 +36,7 @@ class ImmobilizedRokkEbolSceneStrategy implements ReactiveSceneStrategy {
     this.scene.setWaveAmplitude(0);
   }
   
-  void draw(int globalTick) {
+  void draw(long globalTick) {
     // just static drawing strategy
     this.scene.draw();
   }
@@ -55,7 +55,7 @@ class SoundReactiveRokkEbolSceneStrategy implements ReactiveSceneStrategy {
     this.scene.setWaveAmplitude(0);
   }
   
-  void draw(int globalTick) {
+  void draw(long globalTick) {
     // first of all, analyze loudness
     float loudness = fft.analyze();
     // change waves based on loudness of the scene
@@ -81,7 +81,7 @@ class SoundReactiveAndRotatingRokkEbolSceneStrategy implements ReactiveSceneStra
   
   float angle = 0;
   float angleSpeed = 0;
-  void draw(int globalTick) {
+  void draw(long globalTick) {
     // first of all, analyze loudness
     float loudness = fft.analyze();
     if (loudness > 0.17) {

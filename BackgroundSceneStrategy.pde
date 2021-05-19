@@ -29,7 +29,7 @@ abstract class BackgroundSceneStrategy implements ReactiveSceneStrategy {
  * Just simple background
  */
 class FadingBackgroundSceneStrategy extends BackgroundSceneStrategy {
-  void draw(int globalTick) {
+  void draw(long globalTick) {
     // just static drawing strategy
     pushMatrix();
     translate(0, 0, -1000);
@@ -47,7 +47,7 @@ class SoundDependentAlphaBackgroundSceneStrategy extends BackgroundSceneStrategy
   public SoundDependentAlphaBackgroundSceneStrategy(FFTCustomAnalyzer fft) {
     this.fft = fft;
   }
-  void draw(int globalTick) {
+  void draw(long globalTick) {
     float volume = fft.analyze();
     // just static drawing strategy
     pushMatrix();
@@ -125,7 +125,7 @@ class MatrixBackgroundSceneStrategy extends BackgroundSceneStrategy {
     
     f = createFont("matrix.ttf", 32);
   }
-  void draw(int globalTick) {
+  void draw(long globalTick) {
     // just static drawing strategy
     pushMatrix();
     translate(0, 0, -1000);

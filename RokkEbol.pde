@@ -4,10 +4,25 @@ int displayNumber = 1; // choose display number
 
 /* constants initialized during 'setup' procedure */
 PImage sprite, bg;
+PShader julia;
 RokkEbolVibes rokkEbol;
 FFTCustomAnalyzer fft;
 BackgroundSceneStrategy background;
 ReactiveSceneStrategy strategy;
+
+boolean isLsdOnManually = false;
+void flipLsdOption() {
+  isLsdOnManually = !isLsdOnManually;
+  setLSD(isLsdOnManually);
+}
+void setLSD(boolean setLSD) {
+  if (setLSD || isLsdOnManually) {
+    // hello happy weed world
+    shader(julia);
+  } else {
+    resetShader();
+  }
+}
 
 void newStrategy() {
   switch((int)random(2)) {
@@ -36,6 +51,8 @@ void newStrategy() {
       background.setGreyAlpha(0, 255);
       break;
   }
+  // some probability to turn on LSD
+  setLSD(random(1) < 0.2);
 }
 
 void defaultStrategy() {
@@ -66,6 +83,13 @@ void setup() {
   sprite = loadImage("Pub_White_Mini.png");
   bg = loadImage("logo5.png");
   
+  /// SHADERS
+  julia = loadShader("ShaderSample/JuliaFrag.glsl", "ShaderSample/JuliaVert.glsl");
+  julia.set("cRe", 0.2);
+  julia.set("cIm", 0.5);
+  julia.set("iter", 11);
+  julia.set("zoom", 0.5 * min(height, width));
+  
   // initialize custom classes
   rokkEbol = new RokkEbolVibes(new String[] {"РЕМОНТ", "ОБУВИ", "КОПИR", "КЛЮЧЕЙ"});
   // do not forget to update strategy and background
@@ -73,12 +97,19 @@ void setup() {
   defaultBackground();
 }
 
-int time = 0;
+long time = 0;
+float hueOffset;
+float cIm;
 void draw() {
   if (time > 600) {
     newStrategy();
     time = 0;
   }
+  hueOffset = (time % 100) / 100.0;
+  cIm = 1.5*sin(2 * PI * (time % 150) / 150.0);
+  julia.set("hueOffset", hueOffset);
+  julia.set("cIm", cIm);
+  
   background.draw(time);
   strategy.draw(time);
   time++;
@@ -145,6 +176,9 @@ void keyPressed() {
       // turn off matrix mode
       background = new FadingBackgroundSceneStrategy();
       background.setGreyAlpha(0, 24);
+    }
+    if (control && alt && !shift && keyCode == 76) { // CTRL + ALT + L
+      flipLsdOption();
     }
     println("Key pressed with code: " + keyCode + "; alt=" + alt + ", ctrl=" + control + ", shift=" + shift);
   }
