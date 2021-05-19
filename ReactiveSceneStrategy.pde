@@ -130,6 +130,7 @@ class MatrixBackgroundSceneStrategy extends BackgroundSceneStrategy {
 }
 
 ///// FOREGROUNDS
+
 /**
  * This class describes default strategy for scene
  */
@@ -140,6 +141,23 @@ class StaticRokkEbolSceneStrategy implements ReactiveSceneStrategy {
     this.scene.setWaveVector(250, 250);
     this.scene.setWaveCycleTicks(75);
     this.scene.setWaveAmplitude(30);
+  }
+  
+  void draw(int globalTick) {
+    // just static drawing strategy
+    this.scene.draw();
+  }
+}
+
+/**
+ * This strategy is immobilized text renderer
+ */
+class ImmobilizedRokkEbolSceneStrategy implements ReactiveSceneStrategy {
+  RokkEbolVibes scene;
+  public ImmobilizedRokkEbolSceneStrategy(RokkEbolVibes rev) {
+    this.scene = rev;
+    this.scene.setWaveVector(0, 0);
+    this.scene.setWaveAmplitude(0);
   }
   
   void draw(int globalTick) {
