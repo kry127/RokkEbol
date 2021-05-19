@@ -6,6 +6,21 @@ int displayNumber = 1; // choose display number
 PImage sprite, bg;
 RokkEbolVibes rokkEbol;
 FFTCustomAnalyzer fft;
+ReactiveSceneStrategy strategy;
+
+void newStrategy() {
+  switch((int)random(3)) {
+    case 0:
+      strategy = new StaticRokkEbolSceneStrategy(rokkEbol);
+      break;
+    case 1:
+      strategy = new SoundReactiveRokkEbolSceneStrategy(rokkEbol, fft);
+      break;
+    case 2:
+      strategy = new SoundReactiveAndRotatingRokkEbolSceneStrategy(rokkEbol, fft);
+      break;
+  }
+}
 
 void setup() {
   /// SCENE UTILITIES
@@ -30,35 +45,17 @@ void setup() {
   rokkEbol = new RokkEbolVibes(new String[] {"   The", "Raconteurs", "", "   Stedy", "As She Goes"}); // track 3
   rokkEbol = new RokkEbolVibes(new String[] {" The", "Black", "Keys", "", "I Got", "Mine"}); // track 4
   rokkEbol = new RokkEbolVibes(new String[] {"РЕМОНТ", "ОБУВИ", "КОПИR", "КЛЮЧЕЙ"});
-  //rokkEbol.setWaveVector(500, 0);
-  //rokkEbol.setWaveAmplitude(3);
+  // do not forget to update strategy
+  newStrategy();
 }
 
 int time = 0;
-
 void draw() {
-  /* Input data preprocessing */
-  // retrieve input audio spectrum
-  float loudness = fft.analyze();
-  
-  /* Graphics part */
-  fill(0, 24);
-  rect(0, 0, width, height);
-  
-  // sample of whole scene rotation:
-  //translate beggining in left upper corner
-  //translate(width / 2, height / 2);
-  //rotateZ(time / 80.0);
-  //translate(- width / 2, - height / 2);
-  // image(bg, 0, 0, width, height);
-  
-  // you can change rokkebol parameters dynamically
-  // rokkEbol.setWaveAmplitude((int)(100 * sin(2 * PI * time / 360)));
-  // rokkEbol.setWaveCycleTicks((int)(100 * abs(sin(2 * PI * time / 360))) + 10);
-  // draw rokkebol
-  rokkEbol.setWaveAmplitude((int)(3 + 30 * loudness));
-  rokkEbol.setWaveCycleTicks((int)(45 - 30 * loudness));
-  rokkEbol.draw();
+  if (time > 600) {
+    newStrategy();
+    time = 0;
+  }
+  strategy.draw(time);
   time++;
   // save frame
   // saveFrame("frames/####.png");
