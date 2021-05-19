@@ -84,6 +84,7 @@ class RokkEbolVibes {
         popMatrix();
       }
     }
+    
     tick++;
     if (tick >= waveCycleTicks) {
       tick = 0;

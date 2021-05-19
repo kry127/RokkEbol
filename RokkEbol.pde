@@ -10,15 +10,30 @@ BackgroundSceneStrategy background;
 ReactiveSceneStrategy strategy;
 
 void newStrategy() {
-  switch((int)random(3)) {
+  switch((int)random(2)) {
     case 0:
       strategy = new StaticRokkEbolSceneStrategy(rokkEbol);
       break;
     case 1:
       strategy = new SoundReactiveRokkEbolSceneStrategy(rokkEbol, fft);
       break;
+  }
+  switch((int)random(4)) {
+    case 0:
+      background = new FadingBackgroundSceneStrategy();
+      background.setGreyAlpha(0, 24);
+      break;
+    case 1:
+      background = new FadingBackgroundSceneStrategy();
+      background.setGreyAlpha(0, 255);
+      break;
     case 2:
-      strategy = new SoundReactiveAndRotatingRokkEbolSceneStrategy(rokkEbol, fft);
+      background = new MatrixBackgroundSceneStrategy(new int[] {25, 50, 100}, 0, -200);
+      background.setGreyAlpha(0, 24);
+      break;
+    case 3:
+      background = new SoundDependentAlphaBackgroundSceneStrategy(fft);
+      background.setGreyAlpha(0, 255);
       break;
   }
 }
@@ -28,8 +43,9 @@ void defaultStrategy() {
 }
 
 void defaultBackground() {
-  background = new FadingBackgroundSceneStrategy();
+  //background = new FadingBackgroundSceneStrategy();
   //background = new MatrixBackgroundSceneStrategy(new int[] {25, 50, 100}, 0, -200);
+  background = new SoundDependentAlphaBackgroundSceneStrategy(fft);
   background.setGreyAlpha(0, 24);
 }
 
@@ -59,10 +75,10 @@ void setup() {
 
 int time = 0;
 void draw() {
-  //if (time > 600) {
-  //  newStrategy();
-  //  time = 0;
-  //}
+  if (time > 600) {
+    newStrategy();
+    time = 0;
+  }
   background.draw(time);
   strategy.draw(time);
   time++;
@@ -107,7 +123,7 @@ void keyPressed() {
       defaultStrategy();
     }
     if (control && keyCode == 55) { // CTRL + 7
-      rokkEbol = new RokkEbolVibes(new String[] {"Casa", "bian", "", "Club", "Foot"}); // track 4
+      rokkEbol = new RokkEbolVibes(new String[] {"Kasa", "bian", "", "Club", "Foot"}); // track 4
       defaultStrategy();
     }
     if (control && keyCode == 56) { // CTRL + 8

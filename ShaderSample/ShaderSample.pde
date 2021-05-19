@@ -1,38 +1,26 @@
-
-PShape can;
-float angle;
-PShader colorShader;
+PShader julia;
 
 void setup() {
   size(640, 360, P3D);
-  can = createCan(100, 200, 32);
-  colorShader = loadShader("colorfrag.glsl", "colorvert.glsl");
+  noStroke();
+  fill(204);
+  julia = loadShader("JuliaFrag.glsl", "JuliaVert.glsl");
+  julia.set("cRe", 0.2);
+  julia.set("cIm", 0.5);
+  julia.set("iter", 11);
+  julia.set("zoom", 0.5 * min(height, width));
 }
 
+float hueOffset = 0.0;
+float cIm = 0.5;
+long tick = 0;
 void draw() {
+  hueOffset = (tick % 100) / 100.0;
+  cIm = 1.5*sin(2 * PI * (tick % 150) / 150.0);
+  shader(julia);
+  julia.set("hueOffset", hueOffset);
+  julia.set("cIm", cIm);
   background(0);
-  shader(colorShader);
-  translate(width/2, height/2);
-  rotateY(angle);
-  shape(can);
-  angle += 0.01;
-}
-
-PShape createCan(float r, float h, int detail) {
-  textureMode(NORMAL);
-  PShape sh = createShape();
-  sh.beginShape(QUAD_STRIP);
-  sh.fill(255, 255, 0)
-  sh.noStroke();
-  for (int i = 0; i <= detail; i++) {
-    float angle = TWO_PI / detail;
-    float x = sin(i * angle);
-    float z = cos(i * angle);
-    float u = float(i) / detail;
-    sh.normal(x, 0, z);
-    sh.vertex(x * r, -h/2, z * r, u, 0);
-    sh.vertex(x * r, +h/2, z * r, u, 1);
-  }
-  sh.endShape();
-  return sh;
+  rect(0, 0, width, height);
+  tick++;
 }

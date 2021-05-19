@@ -39,6 +39,25 @@ class FadingBackgroundSceneStrategy extends BackgroundSceneStrategy {
   }
 }
 
+/**
+ * Sound reactive background which alpha depends on sound valume
+ */
+class SoundDependentAlphaBackgroundSceneStrategy extends BackgroundSceneStrategy {
+  FFTCustomAnalyzer fft;
+  public SoundDependentAlphaBackgroundSceneStrategy(FFTCustomAnalyzer fft) {
+    this.fft = fft;
+  }
+  void draw(int globalTick) {
+    float volume = fft.analyze();
+    // just static drawing strategy
+    pushMatrix();
+    translate(0, 0, -1000);
+    fill(this.red, this.green, this.blue, volume > 0.2 ? max(0.5 - volume, 0.05) * alpha / 0.3 : alpha);
+    rect(-3*width, -3*height, 6*width, 6*height);
+    popMatrix();
+  }
+}
+
 // TODO oh, this is really a full-scale implementation, rather than strategy. Should be moved to separate class instead
 class MatrixBackgroundSceneStrategy extends BackgroundSceneStrategy {
   private int[] nparticles;
