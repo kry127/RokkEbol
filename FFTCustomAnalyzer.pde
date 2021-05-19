@@ -50,7 +50,7 @@ class FFTCustomAnalyzer {
   }
   
   public float bassLevel() {
-    return averageOn(0, 3);
+    return averageOn(1, 3); // the first bar may contain a lot of noize
   }
   public float smallOctaveLevel() {
     return averageOn(3, 6);

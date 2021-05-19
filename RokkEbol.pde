@@ -6,6 +6,7 @@ int displayNumber = 1; // choose display number
 PImage sprite, bg;
 RokkEbolVibes rokkEbol;
 FFTCustomAnalyzer fft;
+BackgroundSceneStrategy background;
 ReactiveSceneStrategy strategy;
 
 void newStrategy() {
@@ -46,15 +47,20 @@ void setup() {
   rokkEbol = new RokkEbolVibes(new String[] {" The", "Black", "Keys", "", "I Got", "Mine"}); // track 4
   rokkEbol = new RokkEbolVibes(new String[] {"РЕМОНТ", "ОБУВИ", "КОПИR", "КЛЮЧЕЙ"});
   // do not forget to update strategy
-  newStrategy();
+  //newStrategy();
+  strategy = new SoundReactiveAndRotatingRokkEbolSceneStrategy(rokkEbol, fft);
+  //background = new FadingBackgroundSceneStrategy();
+  background = new MatrixBackgroundSceneStrategy(new int[] {25, 50, 100}, 0, -200);
+  background.setGreyAlpha(0, 24);
 }
 
 int time = 0;
 void draw() {
-  if (time > 600) {
-    newStrategy();
-    time = 0;
-  }
+  //if (time > 600) {
+  //  newStrategy();
+  //  time = 0;
+  //}
+  background.draw(time);
   strategy.draw(time);
   time++;
   // save frame
