@@ -172,7 +172,7 @@ void draw() {
   }
   float volume = fft.analyze();
   // LCD hue frequency bpm depends on volume
-  int hueFreqBpm = (int)min(60 + volume * 500, 300);
+  int hueFreqBpm = (int)min(40 + volume * 40, 60);
   hueOffset = timeCrop(time, hueFreqBpm);
   
   cIm = 1.5*sin(2 * PI * timeCrop(time, bpm / 2));
@@ -193,14 +193,14 @@ void keyPressed() {
   control |= keyCode == CONTROL;
   shift |= keyCode == SHIFT;
   if (keyCode != ALT || keyCode != CONTROL || keyCode != SHIFT) {
-    if (control && keyCode == 48) { // CTRL + 0
+    if (control && !alt &&  keyCode == 48) { // CTRL + 0
       rokkEbol = new RokkEbolVibes(new String[] {"РЕМОНТ", "ОБУВИ", "КОПИR", "КЛЮЧЕЙ"});
       defaultStrategy();
       turnOffLsdOption();
       changeStrategies = false; // turn off changing strategies
       bpm = 60;
     }
-    if (control && keyCode == 49) { // CTRL + 1
+    if (control && !alt && keyCode == 49) { // CTRL + 1
       if (shift) { 
         // change font only on SHIFT pressed
         rokkEbol = new RokkEbolVibes(new String[] {"  Oasis", "", "The Shock", " Of The", "Lightning"}); // track 1
@@ -215,7 +215,7 @@ void keyPressed() {
       changeStrategies = false; // turn off changing strategies
       bpm = 139; // also you SHOULD set bpm for every music
     }
-    if (control && keyCode == 50) { // CTRL + 2
+    if (control && !alt && keyCode == 50) { // CTRL + 2
       if (shift) { 
         rokkEbol = new RokkEbolVibes(new String[] {"Miles", "Kane", "", " Hot", "Stuff"}); // track 2
       } else {
@@ -228,7 +228,7 @@ void keyPressed() {
       changeStrategies = false; // turn off changing strategies
       bpm = 122;
     }
-    if (control && keyCode == 51) { // CTRL + 3
+    if (control && !alt && keyCode == 51) { // CTRL + 3
       if (shift) { 
         rokkEbol = new RokkEbolVibes(new String[] {" The ", "Racon", " teurs", "", "Stedy", "As She", " Goes"}); // track 3
       } else {
@@ -241,7 +241,7 @@ void keyPressed() {
       changeStrategies = false; // turn off changing strategies
       bpm = 125;
     }
-    if (control && keyCode == 52) { // CTRL + 4
+    if (control && !alt && keyCode == 52) { // CTRL + 4
       if (shift) { 
         rokkEbol = new RokkEbolVibes(new String[] {" The", "Black", "Keys", "", "I Got", "Mine"}); // track 4
       } else {
@@ -254,7 +254,7 @@ void keyPressed() {
       changeStrategies = false; // turn off changing strategies
       bpm = 80;
     }
-    if (control && keyCode == 53) { // CTRL + 5
+    if (control && !alt && keyCode == 53) { // CTRL + 5
       if (shift) { 
         rokkEbol = new RokkEbolVibes(new String[] {"Iggy", "Pop", "", "Lust", "For", "Life"}); // track 5
       } else {
@@ -267,7 +267,7 @@ void keyPressed() {
       changeStrategies = true; // turn on changing strategies
       bpm = 200;
     }
-    if (control && keyCode == 54) { // CTRL + 6
+    if (control && !alt && keyCode == 54) { // CTRL + 6
       if (shift) { 
         rokkEbol = new RokkEbolVibes(new String[] {" Jet ", "", " Are ", " You ", "Gonna ", "Be My", "Girl"}); // track 6
       } else {
@@ -277,7 +277,7 @@ void keyPressed() {
       turnOffLsdOption();
       bpm = 205;
     }
-    if (control && keyCode == 55) { // CTRL + 7
+    if (control && !alt && keyCode == 55) { // CTRL + 7
       if (shift) { 
         rokkEbol = new RokkEbolVibes(new String[] {"Kasa", "bian", "", "Club", "Foot"}); // track 7
       } else {
@@ -288,7 +288,7 @@ void keyPressed() {
       changeStrategies = true; // turn off changing strategies
       bpm = 102;
     }
-    if (control && keyCode == 56) { // CTRL + 8
+    if (control && !shift && !alt && keyCode == 56) { // CTRL + 8
       rokkEbol = new RokkEbolVibes(new String[] {"OGP", "XEU", "YNB"}); // Oxygen Pub
       defaultStrategy();
       background = new ImageBackgroundSceneStrategy(oxyPubBg);
@@ -296,13 +296,33 @@ void keyPressed() {
       turnOffLsdOption();
       bpm = 60;
     }
-    if (control && keyCode == 57) { // CTRL + 9
+    if (control && !shift && !alt && keyCode == 57) { // CTRL + 9
       rokkEbol = new RokkEbolVibes(new String[] {"PРЕ", "OОБ", "LКО", "YКЛ"}); // Poly Rock
       defaultStrategy();
       background = new ImageBackgroundSceneStrategy(polyRockBg);
       background.setGreyAlpha(0, 55); // produce traces
       turnOffLsdOption();
       bpm = 60;
+    }
+    
+    
+    if (!control && !shift && alt && keyCode == 49) { // ALT + 1
+        rokkEbol = new RokkEbolVibes(new String[] {"РЕМОНТ", "ОБУВИ", "КОПИR", "КЛЮЧЕЙ"});
+      defaultStrategy();
+      background = new FftSquaresBackgroundSceneStrategy(fft); // should be disco background :)
+      background.setGreyAlpha(0, 40); // produce traces
+      turnOffLsdOption();
+      changeStrategies = false; // turn off changing strategies
+      bpm = 100;
+    }
+    if (!control && !shift && alt && keyCode == 50) { // ALT + 2
+      rokkEbol = new RokkEbolVibes(new String[] {"OGP", "XEU", "YNB"}); // Oxygen Pub
+      defaultStrategy();
+      background = new FftSquaresBackgroundSceneStrategy(fft); // should be disco background :)
+      background.setGreyAlpha(0, 40); // produce traces
+      turnOffLsdOption();
+      changeStrategies = false; // turn off changing strategies
+      bpm = 100;
     }
     
     // background shortcuts
