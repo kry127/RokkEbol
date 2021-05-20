@@ -97,7 +97,7 @@ void newStrategy() {
       break;
   }
   // some probability to turn on LSD
-  setLSD(random(1) < 0.2);
+  // setLSD(random(1) < 0.2);
 }
 
 void defaultStrategy() {
@@ -307,22 +307,49 @@ void keyPressed() {
     
     
     if (!control && !shift && alt && keyCode == 49) { // ALT + 1
-        rokkEbol = new RokkEbolVibes(new String[] {"РЕМОНТ", "ОБУВИ", "КОПИR", "КЛЮЧЕЙ"});
+      rokkEbol = new RokkEbolVibes(new String[] {"РЕМОНТ", "ОБУВИ", "КОПИR", "КЛЮЧЕЙ"});
       defaultStrategy();
-      background = new FftSquaresBackgroundSceneStrategy(fft); // should be disco background :)
-      background.setGreyAlpha(0, 40); // produce traces
+      background = new FftSquaresBackgroundSceneStrategy(fft);
+      background.setGreyAlpha(0, 30); // produce traces
       turnOffLsdOption();
       changeStrategies = false; // turn off changing strategies
       bpm = 100;
     }
     if (!control && !shift && alt && keyCode == 50) { // ALT + 2
-      rokkEbol = new RokkEbolVibes(new String[] {"OGP", "XEU", "YNB"}); // Oxygen Pub
+      rokkEbol = new RokkEbolVibes(new String[] {"OGP", "XEU", "YNB"}); // Track 3
       defaultStrategy();
       background = new FftSquaresBackgroundSceneStrategy(fft); // should be disco background :)
-      background.setGreyAlpha(0, 40); // produce traces
+      background.setGreyAlpha(0, 30); // produce traces
       turnOffLsdOption();
       changeStrategies = false; // turn off changing strategies
-      bpm = 100;
+      bpm = 125;
+    }
+    if (!control && !shift && alt && keyCode == 51) { // ALT + 3
+      rokkEbol = new RokkEbolVibes(new String[] {"OXY", "GEN", "PUB"}); // Track 4
+      defaultStrategy();
+      background = new FftSquaresBackgroundSceneStrategy(fft);
+      background.setGreyAlpha(0, 30); // produce traces
+      turnOffLsdOption();
+      changeStrategies = false; // turn off changing strategies
+      bpm = 80;
+    }
+    if (!control && !shift && alt && keyCode == 52) { // ALT + 4
+      rokkEbol = new RokkEbolVibes(new String[] {"РЕМОНТ", "ОБУВИ", "КОПИR", "КЛЮЧЕЙ"}); // Track5 + 5.1
+      strategy = new SoundReactiveRokkEbolSceneStrategy(rokkEbol, fft);
+      background = new FftSquaresBackgroundSceneStrategy(fft);
+      background.setGreyAlpha(0, 30); // produce traces
+      turnOffLsdOption();
+      changeStrategies = false; // turn off changing strategies
+      bpm = 200;
+    }
+    if (!control && !shift && alt && keyCode == 53) { // ALT + 5
+      rokkEbol = new RokkEbolVibes(new String[] {"OGP", "XEU", "YNB"}); // Track 6
+      defaultStrategy();
+      background = new FftSquaresBackgroundSceneStrategy(fft);
+      background.setGreyAlpha(0, 30); // produce traces
+      turnOffLsdOption();
+      changeStrategies = false; // turn off changing strategies
+      bpm = 102;
     }
     
     // background shortcuts
