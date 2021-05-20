@@ -71,7 +71,7 @@ void newStrategy() {
       strategy = new SoundReactiveRokkEbolSceneStrategy(rokkEbol, fft);
       break;
   }
-  switch((int)random(5)) {
+  switch((int)random(7)) {
     case 0:
       background = new FadingBackgroundSceneStrategy();
       background.setGreyAlpha(0, 24);
@@ -90,6 +90,10 @@ void newStrategy() {
       break;
     case 4:
       background = new FftBarsBackgroundSceneStrategy(fft);
+      background.setGreyAlpha(0, 32);
+      break;
+    case 5:
+      background = new FftSquaresBackgroundSceneStrategy(fft);
       background.setGreyAlpha(0, 32);
       break;
   }

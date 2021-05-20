@@ -5,7 +5,7 @@ This repository contains Processing java code for background of live performance
 
 ## TODO
 
-- [ ] OxyPub and PolyRock logo on scenes
+- [x] OxyPub and PolyRock logo on scenes
 - [ ] Stars bg
 - [ ] circles bg
 - [x] square matrix fft bg (divide screen by squares and assign velocity by fft array)
