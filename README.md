@@ -3,6 +3,12 @@
 Hello 👋
 This repository contains Processing java code for background of live performance on PolyRock'21.
 
+## TODO
+[ ] OxyPub and PolyRock logo on scenes
+[ ] Stars bg
+[ ] circles bg
+[ ] square matrix fft bg (divide screen by squares and assign velocity by fft array)
+
 ## Demo
 ![рокк ебол мупю ович](data/ezgif-3-e10e89d2a88a.gif)
 
