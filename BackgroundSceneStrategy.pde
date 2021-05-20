@@ -58,6 +58,33 @@ class SoundDependentAlphaBackgroundSceneStrategy extends BackgroundSceneStrategy
   }
 }
 
+
+class FftBarsBackgroundSceneStrategy extends BackgroundSceneStrategy {
+  FFTCustomAnalyzer fft;
+  public FftBarsBackgroundSceneStrategy(FFTCustomAnalyzer fft) {
+    this.fft = fft;
+  }
+  void draw(long globalTick) {
+    // analyze fft
+    float volume = fft.analyze();
+    // draw standard bg
+    pushMatrix();
+    translate(0, 0, -1000);
+    fill(this.red, this.green, this.blue, this.alpha);
+    rect(-3*width, -3*height, 6*width, 6*height);
+    popMatrix();
+    // then draw bars
+    
+    rectMode(CORNERS);
+    float[] spectrum = fft.getSpectrum();
+    int bands = spectrum.length / 4;
+    for(int i = 0; i < bands; i++){
+      fill(148 + 35 * sin(2 * PI * globalTick % 300 / 300), 220 + 35 * sin(2 * PI * globalTick % 120 / 120), 0, this.alpha);
+      rect( 1.0 * i * width / bands, height, 1.0 * (i + 1) * width / bands, height - spectrum[i]*height*6.0);
+    }
+  }
+}
+
 // TODO oh, this is really a full-scale implementation, rather than strategy. Should be moved to separate class instead
 class MatrixBackgroundSceneStrategy extends BackgroundSceneStrategy {
   private int[] nparticles;

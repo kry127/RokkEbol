@@ -11,6 +11,10 @@ BackgroundSceneStrategy background;
 ReactiveSceneStrategy strategy;
 
 boolean isLsdOnManually = false;
+void turnOffLsdOption() {
+  isLsdOnManually = false;
+  setLSD(isLsdOnManually);
+}
 void flipLsdOption() {
   isLsdOnManually = !isLsdOnManually;
   setLSD(isLsdOnManually);
@@ -24,6 +28,28 @@ void setLSD(boolean setLSD) {
   }
 }
 
+// chooses some text to render, but not spoil song name
+void standardRandomRokkEbol() {
+  switch((int)random(4)) {
+    case 0:
+      // РОКК ЕБОЛ
+      rokkEbol = new RokkEbolVibes(new String[] {"РЕМОНТ", "ОБУВИ", "КОПИR", "КЛЮЧЕЙ"});
+      break;
+    case 1:
+      // Group name anagram: Oxygen Pub
+      rokkEbol = new RokkEbolVibes(new String[] {"OGP", "XEU", "YNB"}); // track 4
+      break;
+    case 2:
+      // tribute to the festival 'PolyRock'
+      rokkEbol = new RokkEbolVibes(new String[] {"PР", "OО", "LК", "YК"}); // track 4
+      break;
+    case 3:
+      // tribute to the festival 'PolyRock' in the form of "POLY РОКК ЕБОЛ"
+      rokkEbol = new RokkEbolVibes(new String[] {"PРЕ", "OОБ", "LКО", "YКЛ"}); // track 4
+      break;
+  }
+}
+
 void newStrategy() {
   switch((int)random(2)) {
     case 0:
@@ -33,7 +59,7 @@ void newStrategy() {
       strategy = new SoundReactiveRokkEbolSceneStrategy(rokkEbol, fft);
       break;
   }
-  switch((int)random(4)) {
+  switch((int)random(5)) {
     case 0:
       background = new FadingBackgroundSceneStrategy();
       background.setGreyAlpha(0, 24);
@@ -50,6 +76,10 @@ void newStrategy() {
       background = new SoundDependentAlphaBackgroundSceneStrategy(fft);
       background.setGreyAlpha(0, 255);
       break;
+    case 4:
+      background = new FftBarsBackgroundSceneStrategy(fft);
+      background.setGreyAlpha(0, 32);
+      break;
   }
   // some probability to turn on LSD
   setLSD(random(1) < 0.2);
@@ -60,9 +90,10 @@ void defaultStrategy() {
 }
 
 void defaultBackground() {
-  //background = new FadingBackgroundSceneStrategy();
+  background = new FadingBackgroundSceneStrategy();
   //background = new MatrixBackgroundSceneStrategy(new int[] {25, 50, 100}, 0, -200);
-  background = new SoundDependentAlphaBackgroundSceneStrategy(fft);
+  //background = new SoundDependentAlphaBackgroundSceneStrategy(fft);
+  //background = new FftBarsBackgroundSceneStrategy(fft);
   background.setGreyAlpha(0, 24);
 }
 
@@ -97,22 +128,39 @@ void setup() {
   defaultBackground();
 }
 
-long time = 0;
+int time = 0;
+int timeNow = 0, timeFrom = 0;
 float hueOffset;
 float cIm;
+float bpm = 60;
+int bpmToMillis(float bpm) {
+  return (int)max(1000 * 60 / bpm, 1);
+}
+// this function accepts time as millisecond and bpm and returns [0, 1] float 
+float timeCrop(int millis, float bpm) {
+  int millisSpan = bpmToMillis(bpm);
+  return millis % millisSpan / (float)millisSpan;
+}
+  
 void draw() {
-  if (time > 600) {
-    newStrategy();
+  timeNow = millis();
+  time = timeNow - timeFrom;
+  if (time > 25 * 1000) {
+    timeFrom = timeNow;
     time = 0;
+    newStrategy();
   }
-  hueOffset = (time % 100) / 100.0;
-  cIm = 1.5*sin(2 * PI * (time % 150) / 150.0);
+  float volume = fft.analyze();
+  // LCD hue frequency bpm depends on volume
+  int hueFreqBpm = (int)min(60 + volume * 500, 300);
+  hueOffset = timeCrop(time, hueFreqBpm);
+  
+  cIm = 1.5*sin(2 * PI * timeCrop(time, bpm / 2));
   julia.set("hueOffset", hueOffset);
   julia.set("cIm", cIm);
   
   background.draw(time);
   strategy.draw(time);
-  time++;
   // save frame
   // saveFrame("frames/####.png");
 }
@@ -128,42 +176,92 @@ void keyPressed() {
     if (control && keyCode == 48) { // CTRL + 0
       rokkEbol = new RokkEbolVibes(new String[] {"РЕМОНТ", "ОБУВИ", "КОПИR", "КЛЮЧЕЙ"});
       defaultStrategy();
+      turnOffLsdOption();
+      bpm = 60;
     }
     if (control && keyCode == 49) { // CTRL + 1
-      rokkEbol = new RokkEbolVibes(new String[] {"  Oasis", "", "The Shock", " Of The", "Lightning"}); // track 1
+      if (shift) { 
+        // change font only on SHIFT pressed
+        rokkEbol = new RokkEbolVibes(new String[] {"  Oasis", "", "The Shock", " Of The", "Lightning"}); // track 1
+      } else {
+        // otherwise choose from standard set of lables
+        standardRandomRokkEbol();
+      }
       defaultStrategy();
+      turnOffLsdOption();
+      bpm = 139; // also you SHOULD set bpm for every music
     }
     if (control && keyCode == 50) { // CTRL + 2
-      rokkEbol = new RokkEbolVibes(new String[] {"Miles", "Kane", "", " Hot", "Stuff"}); // track 2
+      if (shift) { 
+        rokkEbol = new RokkEbolVibes(new String[] {"Miles", "Kane", "", " Hot", "Stuff"}); // track 2
+      } else {
+        standardRandomRokkEbol();
+      }
       defaultStrategy();
+      turnOffLsdOption();
+      bpm = 122;
     }
     if (control && keyCode == 51) { // CTRL + 3
-      rokkEbol = new RokkEbolVibes(new String[] {" The ", "Racon", " teurs", "", "Stedy", "As She", " Goes"}); // track 3
+      if (shift) { 
+        rokkEbol = new RokkEbolVibes(new String[] {" The ", "Racon", " teurs", "", "Stedy", "As She", " Goes"}); // track 3
+      } else {
+        standardRandomRokkEbol();
+      }
       defaultStrategy();
+      turnOffLsdOption();
+      bpm = 125;
     }
     if (control && keyCode == 52) { // CTRL + 4
-      rokkEbol = new RokkEbolVibes(new String[] {" The", "Black", "Keys", "", "I Got", "Mine"}); // track 4
+      if (shift) { 
+        rokkEbol = new RokkEbolVibes(new String[] {" The", "Black", "Keys", "", "I Got", "Mine"}); // track 4
+      } else {
+        standardRandomRokkEbol();
+      }
       defaultStrategy();
+      turnOffLsdOption();
+      bpm = 80;
     }
     if (control && keyCode == 53) { // CTRL + 5
-      rokkEbol = new RokkEbolVibes(new String[] {"Iggy", "Pop", "", "Lust", "For", "Life"}); // track 4
+      if (shift) { 
+        rokkEbol = new RokkEbolVibes(new String[] {"Iggy", "Pop", "", "Lust", "For", "Life"}); // track 5
+      } else {
+        standardRandomRokkEbol();
+      }
       defaultStrategy();
+      turnOffLsdOption();
+      bpm = 200;
     }
     if (control && keyCode == 54) { // CTRL + 6
-      rokkEbol = new RokkEbolVibes(new String[] {" Jet ", "", " Are ", " You ", "Gonna ", "Be My", "Girl"}); // track 4
+      if (shift) { 
+        rokkEbol = new RokkEbolVibes(new String[] {" Jet ", "", " Are ", " You ", "Gonna ", "Be My", "Girl"}); // track 6
+      } else {
+        standardRandomRokkEbol();
+      }
       defaultStrategy();
+      turnOffLsdOption();
+      bpm = 205;
     }
     if (control && keyCode == 55) { // CTRL + 7
-      rokkEbol = new RokkEbolVibes(new String[] {"Kasa", "bian", "", "Club", "Foot"}); // track 4
+      if (shift) { 
+        rokkEbol = new RokkEbolVibes(new String[] {"Kasa", "bian", "", "Club", "Foot"}); // track 7
+      } else {
+        standardRandomRokkEbol();
+      }
       defaultStrategy();
+      turnOffLsdOption();
+      bpm = 102;
     }
     if (control && keyCode == 56) { // CTRL + 8
       rokkEbol = new RokkEbolVibes(new String[] {"OGP", "XEU", "YNB"}); // track 4
       defaultStrategy();
+      turnOffLsdOption();
+      bpm = 60;
     }
     if (control && keyCode == 57) { // CTRL + 9
       rokkEbol = new RokkEbolVibes(new String[] {"PРЕ", "OОБ", "LКО", "YКЛ"}); // track 4
       defaultStrategy();
+      turnOffLsdOption();
+      bpm = 60;
     }
     
     
@@ -179,6 +277,12 @@ void keyPressed() {
     }
     if (control && alt && !shift && keyCode == 76) { // CTRL + ALT + L
       flipLsdOption();
+    }
+    if (control && keyCode == 37) { // CTRL + LEFT
+      bpm -= 5;
+    }
+    if (control && keyCode == 39) { // CTRL + RIGHT
+      bpm += 5;
     }
     println("Key pressed with code: " + keyCode + "; alt=" + alt + ", ctrl=" + control + ", shift=" + shift);
   }

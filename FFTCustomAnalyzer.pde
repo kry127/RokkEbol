@@ -49,6 +49,10 @@ class FFTCustomAnalyzer {
     return acc / (end - start);
   }
   
+  public float[] getSpectrum() {
+    return spectrum;
+  }
+  
   public float bassLevel() {
     return averageOn(1, 3); // the first bar may contain a lot of noize
   }
