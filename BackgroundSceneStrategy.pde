@@ -39,6 +39,22 @@ class FadingBackgroundSceneStrategy extends BackgroundSceneStrategy {
   }
 }
 
+
+/**
+ * Image background
+ */
+class ImageBackgroundSceneStrategy extends BackgroundSceneStrategy {
+  PImage img;
+  public ImageBackgroundSceneStrategy(PImage img) {
+    this.img = img;
+  }
+  void draw(long globalTick) {
+    // just static drawing strategy
+    fill(this.red, this.green, this.blue, this.alpha);
+    image(img, 0, 0, width, height);
+  }
+}
+
 /**
  * Sound reactive background which alpha depends on sound valume
  */

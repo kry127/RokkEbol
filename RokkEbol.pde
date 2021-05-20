@@ -3,7 +3,7 @@
 int displayNumber = 1; // choose display number
 
 /* constants initialized during 'setup' procedure */
-PImage sprite, bg;
+PImage sprite, oxyPubBg, polyRockBg;
 PShader julia;
 RokkEbolVibes rokkEbol;
 FFTCustomAnalyzer fft;
@@ -13,6 +13,10 @@ ReactiveSceneStrategy strategy;
 boolean isLsdOnManually = false;
 void turnOffLsdOption() {
   isLsdOnManually = false;
+  setLSD(isLsdOnManually);
+}
+void turnOnLsdOption() {
+  isLsdOnManually = true;
   setLSD(isLsdOnManually);
 }
 void flipLsdOption() {
@@ -30,20 +34,28 @@ void setLSD(boolean setLSD) {
 
 // chooses some text to render, but not spoil song name
 void standardRandomRokkEbol() {
-  switch((int)random(4)) {
+  switch((int)random(10)) {
     case 0:
+    case 1:
+    case 2:
       // РОКК ЕБОЛ
       rokkEbol = new RokkEbolVibes(new String[] {"РЕМОНТ", "ОБУВИ", "КОПИR", "КЛЮЧЕЙ"});
       break;
-    case 1:
+    case 3:
       // Group name anagram: Oxygen Pub
       rokkEbol = new RokkEbolVibes(new String[] {"OGP", "XEU", "YNB"}); // track 4
       break;
-    case 2:
+    case 4:
+    case 5:
+    case 6:
       // tribute to the festival 'PolyRock'
       rokkEbol = new RokkEbolVibes(new String[] {"PР", "OО", "LК", "YК"}); // track 4
       break;
-    case 3:
+    case 7:
+      // tribute to the festival 'PolyRock'
+      rokkEbol = new RokkEbolVibes(new String[] {"POLY", "ROCK", " -- ", "LOVE"}); // track 4
+    case 8:
+    case 9:
       // tribute to the festival 'PolyRock' in the form of "POLY РОКК ЕБОЛ"
       rokkEbol = new RokkEbolVibes(new String[] {"PРЕ", "OОБ", "LКО", "YКЛ"}); // track 4
       break;
@@ -94,9 +106,9 @@ void defaultBackground() {
   //background = new MatrixBackgroundSceneStrategy(new int[] {25, 50, 100}, 0, -200);
   //background = new SoundDependentAlphaBackgroundSceneStrategy(fft);
   //background = new FftBarsBackgroundSceneStrategy(fft);
-  background = new FftSquaresBackgroundSceneStrategy(fft);
+  // background = new FftSquaresBackgroundSceneStrategy(fft);
   
-  background.setGreyAlpha(0, 24);
+  background.setGreyAlpha(0, 255); // make nontraceable background by default
 }
 
 void setup() {
@@ -114,7 +126,8 @@ void setup() {
   /// RESOURCES AND PARTICLE SYSTEMS
   // upload images
   sprite = loadImage("Pub_White_Mini.png");
-  bg = loadImage("logo5.png");
+  oxyPubBg = loadImage("logo5.png");
+  polyRockBg = loadImage("PolyRock.jpg");
   
   /// SHADERS
   julia = loadShader("ShaderSample/JuliaFrag.glsl", "ShaderSample/JuliaVert.glsl");
@@ -143,11 +156,13 @@ float timeCrop(int millis, float bpm) {
   int millisSpan = bpmToMillis(bpm);
   return millis % millisSpan / (float)millisSpan;
 }
+
+boolean changeStrategies = false;
   
 void draw() {
   timeNow = millis();
   time = timeNow - timeFrom;
-  if (time > 25 * 1000) {
+  if (time > 25 * 1000 && changeStrategies) {
     timeFrom = timeNow;
     time = 0;
     newStrategy();
@@ -191,6 +206,9 @@ void keyPressed() {
       }
       defaultStrategy();
       turnOffLsdOption();
+      background = new FadingBackgroundSceneStrategy();
+      background.setGreyAlpha(0, 32); // produce traces
+      changeStrategies = false; // turn off changing strategies
       bpm = 139; // also you SHOULD set bpm for every music
     }
     if (control && keyCode == 50) { // CTRL + 2
@@ -201,6 +219,9 @@ void keyPressed() {
       }
       defaultStrategy();
       turnOffLsdOption();
+      background = new FftSquaresBackgroundSceneStrategy(fft); // should be disco background :)
+      background.setGreyAlpha(0, 40); // produce traces
+      changeStrategies = false; // turn off changing strategies
       bpm = 122;
     }
     if (control && keyCode == 51) { // CTRL + 3
@@ -209,8 +230,11 @@ void keyPressed() {
       } else {
         standardRandomRokkEbol();
       }
-      defaultStrategy();
+      strategy = new SoundReactiveRokkEbolSceneStrategy(rokkEbol, fft);
+      background = new FadingBackgroundSceneStrategy();
+      background.setGreyAlpha(0, 25); // produce traces
       turnOffLsdOption();
+      changeStrategies = false; // turn off changing strategies
       bpm = 125;
     }
     if (control && keyCode == 52) { // CTRL + 4
@@ -220,7 +244,10 @@ void keyPressed() {
         standardRandomRokkEbol();
       }
       defaultStrategy();
+      background = new MatrixBackgroundSceneStrategy(new int[] {25, 50, 100}, 0, -200);
+      background.setGreyAlpha(0, 18); // produce traces
       turnOffLsdOption();
+      changeStrategies = false; // turn off changing strategies
       bpm = 80;
     }
     if (control && keyCode == 53) { // CTRL + 5
@@ -230,7 +257,10 @@ void keyPressed() {
         standardRandomRokkEbol();
       }
       defaultStrategy();
+      background = new FftBarsBackgroundSceneStrategy(fft); // should be disco background :)
+      background.setGreyAlpha(0, 22); // produce traces
       turnOffLsdOption();
+      changeStrategies = true; // turn on changing strategies
       bpm = 200;
     }
     if (control && keyCode == 54) { // CTRL + 6
@@ -251,17 +281,22 @@ void keyPressed() {
       }
       defaultStrategy();
       turnOffLsdOption();
+      changeStrategies = true; // turn off changing strategies
       bpm = 102;
     }
     if (control && keyCode == 56) { // CTRL + 8
-      rokkEbol = new RokkEbolVibes(new String[] {"OGP", "XEU", "YNB"}); // track 4
+      rokkEbol = new RokkEbolVibes(new String[] {"OGP", "XEU", "YNB"}); // Oxygen Pub
       defaultStrategy();
+      background = new ImageBackgroundSceneStrategy(oxyPubBg);
+      background.setGreyAlpha(0, 55); // produce traces
       turnOffLsdOption();
       bpm = 60;
     }
     if (control && keyCode == 57) { // CTRL + 9
-      rokkEbol = new RokkEbolVibes(new String[] {"PРЕ", "OОБ", "LКО", "YКЛ"}); // track 4
+      rokkEbol = new RokkEbolVibes(new String[] {"PРЕ", "OОБ", "LКО", "YКЛ"}); // Poly Rock
       defaultStrategy();
+      background = new ImageBackgroundSceneStrategy(polyRockBg);
+      background.setGreyAlpha(0, 55); // produce traces
       turnOffLsdOption();
       bpm = 60;
     }
