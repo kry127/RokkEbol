@@ -4,10 +4,11 @@ Hello 👋
 This repository contains Processing java code for background of live performance on PolyRock'21.
 
 ## TODO
-[ ] OxyPub and PolyRock logo on scenes
-[ ] Stars bg
-[ ] circles bg
-[ ] square matrix fft bg (divide screen by squares and assign velocity by fft array)
+
+- [ ] OxyPub and PolyRock logo on scenes
+- [ ] Stars bg
+- [ ] circles bg
+- [ ] square matrix fft bg (divide screen by squares and assign velocity by fft array)
 
 ## Demo
 ![рокк ебол мупю ович](data/ezgif-3-e10e89d2a88a.gif)
@@ -19,7 +20,7 @@ https://processing.org/
 ## How to launch
 1. Clone this repository: `git clone https://github.com/kry127/RokkEbol`.
 2. Open `RokkEbol.pde` in cloned repository
-3. Ppress play in IDE interface
+3. Press play in IDE interface
 
 ## Acknowledgement
 
