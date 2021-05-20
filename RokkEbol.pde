@@ -33,27 +33,30 @@ void standardRandomRokkEbol() {
   switch((int)random(10)) {
     case 0:
     case 1:
-    case 2:
       // РОКК ЕБОЛ
       rokkEbol = new RokkEbolVibes(new String[] {"РЕМОНТ", "ОБУВИ", "КОПИR", "КЛЮЧЕЙ"});
       break;
+    case 2:
     case 3:
       // Group name anagram: Oxygen Pub
-      rokkEbol = new RokkEbolVibes(new String[] {"OGP", "XEU", "YNB"}); // track 4
+      rokkEbol = new RokkEbolVibes(new String[] {"OGP", "XEU", "YNB"});
       break;
     case 4:
     case 5:
+      // tribute to the festival 'PolyRock 2021'
+      rokkEbol = new RokkEbolVibes(new String[] {"POLY", "ROCK", "2021"});
+      break;
     case 6:
       // tribute to the festival 'PolyRock'
-      rokkEbol = new RokkEbolVibes(new String[] {"PР", "OО", "LК", "YК"}); // track 4
+      rokkEbol = new RokkEbolVibes(new String[] {"PР", "OО", "LК", "YК"});
       break;
     case 7:
-      // tribute to the festival 'PolyRock'
-      rokkEbol = new RokkEbolVibes(new String[] {"POLY", "ROCK", " -- ", "LOVE"}); // track 4
     case 8:
+      // tribute to the festival 'PolyRock' with love
+      rokkEbol = new RokkEbolVibes(new String[] {"POLY", "ROCK", " -- ", "LOVE"});
     case 9:
       // tribute to the festival 'PolyRock' in the form of "POLY РОКК ЕБОЛ"
-      rokkEbol = new RokkEbolVibes(new String[] {"PРЕ", "OОБ", "LКО", "YКЛ"}); // track 4
+      rokkEbol = new RokkEbolVibes(new String[] {"PРЕ", "OОБ", "LКО", "YКЛ"});
       break;
   }
 }
@@ -216,7 +219,7 @@ void keyPressed() {
       if (shift) { 
         rokkEbol = new RokkEbolVibes(new String[] {"Miles", "Kane", "", " Hot", "Stuff"}); // track 2
       } else {
-        standardRandomRokkEbol();
+        rokkEbol = new RokkEbolVibes(new String[] {"POLY", "ROCK", " -- ", "LOVE"}); // track 4
       }
       defaultStrategy();
       turnOffLsdOption();
@@ -229,7 +232,7 @@ void keyPressed() {
       if (shift) { 
         rokkEbol = new RokkEbolVibes(new String[] {" The ", "Racon", " teurs", "", "Stedy", "As She", " Goes"}); // track 3
       } else {
-        standardRandomRokkEbol();
+        rokkEbol = new RokkEbolVibes(new String[] {"OGP", "XEU", "YNB"}); // track 4
       }
       strategy = new SoundReactiveRokkEbolSceneStrategy(rokkEbol, fft);
       background = new FadingBackgroundSceneStrategy();
@@ -242,7 +245,7 @@ void keyPressed() {
       if (shift) { 
         rokkEbol = new RokkEbolVibes(new String[] {" The", "Black", "Keys", "", "I Got", "Mine"}); // track 4
       } else {
-        standardRandomRokkEbol();
+        rokkEbol = new RokkEbolVibes(new String[] {"PР", "OО", "LК", "YК"}); // track 4
       }
       defaultStrategy();
       background = new MatrixBackgroundSceneStrategy(new int[] {25, 50, 100}, 0, -200);
@@ -255,7 +258,7 @@ void keyPressed() {
       if (shift) { 
         rokkEbol = new RokkEbolVibes(new String[] {"Iggy", "Pop", "", "Lust", "For", "Life"}); // track 5
       } else {
-        standardRandomRokkEbol();
+        rokkEbol = new RokkEbolVibes(new String[] {"POLY", "ROCK", "2021"});
       }
       defaultStrategy();
       background = new FftBarsBackgroundSceneStrategy(fft); // should be disco background :)
@@ -268,7 +271,7 @@ void keyPressed() {
       if (shift) { 
         rokkEbol = new RokkEbolVibes(new String[] {" Jet ", "", " Are ", " You ", "Gonna ", "Be My", "Girl"}); // track 6
       } else {
-        standardRandomRokkEbol();
+        rokkEbol = new RokkEbolVibes(new String[] {"PРЕ", "OОБ", "LКО", "YКЛ"}); // track 4
       }
       defaultStrategy();
       turnOffLsdOption();
@@ -278,7 +281,7 @@ void keyPressed() {
       if (shift) { 
         rokkEbol = new RokkEbolVibes(new String[] {"Kasa", "bian", "", "Club", "Foot"}); // track 7
       } else {
-        standardRandomRokkEbol();
+      rokkEbol = new RokkEbolVibes(new String[] {"РЕМОНТ", "ОБУВИ", "КОПИR", "КЛЮЧЕЙ"});
       }
       defaultStrategy();
       turnOffLsdOption();
