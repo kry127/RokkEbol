@@ -94,6 +94,8 @@ void defaultBackground() {
   //background = new MatrixBackgroundSceneStrategy(new int[] {25, 50, 100}, 0, -200);
   //background = new SoundDependentAlphaBackgroundSceneStrategy(fft);
   //background = new FftBarsBackgroundSceneStrategy(fft);
+  background = new FftSquaresBackgroundSceneStrategy(fft);
+  
   background.setGreyAlpha(0, 24);
 }
 

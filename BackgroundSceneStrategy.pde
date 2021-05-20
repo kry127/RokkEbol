@@ -58,10 +58,20 @@ class SoundDependentAlphaBackgroundSceneStrategy extends BackgroundSceneStrategy
   }
 }
 
-
+/**
+ * This background renders bars
+ */
 class FftBarsBackgroundSceneStrategy extends BackgroundSceneStrategy {
   FFTCustomAnalyzer fft;
+  int redBar, greenBar, blueBar;
+  int redBarA, greenBarA, blueBarA;
   public FftBarsBackgroundSceneStrategy(FFTCustomAnalyzer fft) {
+    redBar = (int)random(128, 256);
+    greenBar = (int)random(128, 256);
+    blueBar = (int)random(128, 256);
+    redBarA = (int)random(0, 32);
+    greenBarA = (int)random(0, 32);
+    blueBarA = (int)random(0, 32);
     this.fft = fft;
   }
   void draw(long globalTick) {
@@ -79,9 +89,51 @@ class FftBarsBackgroundSceneStrategy extends BackgroundSceneStrategy {
     float[] spectrum = fft.getSpectrum();
     int bands = spectrum.length / 4;
     for(int i = 0; i < bands; i++){
-      fill(148 + 35 * sin(2 * PI * globalTick % 300 / 300), 220 + 35 * sin(2 * PI * globalTick % 120 / 120), 0, this.alpha);
+      fill(redBar + redBarA * sin(2 * PI * (globalTick % 300 / 300)), greenBar + greenBarA * sin(2 * PI * (globalTick % 120 / 120)), blueBar + blueBarA * sin(2 * PI * (globalTick % 220 / 220)), this.alpha);
       rect( 1.0 * i * width / bands, height, 1.0 * (i + 1) * width / bands, height - spectrum[i]*height*6.0);
     }
+  }
+}
+
+
+
+/**
+ * This background renders fft squares
+ */
+class FftSquaresBackgroundSceneStrategy extends BackgroundSceneStrategy {
+  FFTCustomAnalyzer fft;
+  float hueMultiplier = 64.0;
+  float saturationMultiplier = 32.0;
+  float valueMultiplier = 2.0;
+  public FftSquaresBackgroundSceneStrategy(FFTCustomAnalyzer fft) {
+    this.fft = fft;
+  }
+  void draw(long globalTick) {
+    // analyze fft
+    float volume = fft.analyze();
+    // draw standard bg
+    pushMatrix();
+    translate(0, 0, -1000);
+    fill(this.red, this.green, this.blue, this.alpha);
+    rect(-3*width, -3*height, 6*width, 6*height);
+    popMatrix();
+    // then draw bars
+    
+    rectMode(CORNERS);
+    float[] spectrum = fft.getSpectrum();
+    int sqM = 8;
+    int sqN = 8;
+    colorMode(HSB, 255);
+    for (int i = 0; i < sqM; i++) {
+      for (int j = 0; j < sqN; j++) {
+        int id = i * sqN + j;
+          color c = color(hueMultiplier * 256.0 * spectrum[id + sqM * sqN], saturationMultiplier * 256.0 * (0.5 + spectrum[id + sqM * sqN]), valueMultiplier * 256.0 * spectrum[id]);
+          fill(c);
+          rect( 1.0 * i       * width / sqN + 10, 1.0 * j       * height / sqM + 10,
+                1.0 * (i + 1) * width / sqN - 10, 1.0 * (j + 1) * height / sqN - 10);
+      }
+    }
+    colorMode(RGB); // restore default color mode
   }
 }
 
