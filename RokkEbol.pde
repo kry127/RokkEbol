@@ -15,10 +15,6 @@ void turnOffLsdOption() {
   isLsdOnManually = false;
   setLSD(isLsdOnManually);
 }
-void turnOnLsdOption() {
-  isLsdOnManually = true;
-  setLSD(isLsdOnManually);
-}
 void flipLsdOption() {
   isLsdOnManually = !isLsdOnManually;
   setLSD(isLsdOnManually);
@@ -198,6 +194,7 @@ void keyPressed() {
       rokkEbol = new RokkEbolVibes(new String[] {"РЕМОНТ", "ОБУВИ", "КОПИR", "КЛЮЧЕЙ"});
       defaultStrategy();
       turnOffLsdOption();
+      changeStrategies = false; // turn off changing strategies
       bpm = 60;
     }
     if (control && keyCode == 49) { // CTRL + 1
@@ -206,7 +203,7 @@ void keyPressed() {
         rokkEbol = new RokkEbolVibes(new String[] {"  Oasis", "", "The Shock", " Of The", "Lightning"}); // track 1
       } else {
         // otherwise choose from standard set of lables
-        standardRandomRokkEbol();
+        rokkEbol = new RokkEbolVibes(new String[] {"РЕМОНТ", "ОБУВИ", "КОПИR", "КЛЮЧЕЙ"});
       }
       defaultStrategy();
       turnOffLsdOption();
@@ -305,16 +302,49 @@ void keyPressed() {
       bpm = 60;
     }
     
-    
-    if (control && !alt && !shift && keyCode == 77) { // CTRL + M
-      // turn on matrix mode
+    // background shortcuts
+    if (!control && alt && !shift && keyCode == 68) { // CTRL + D
+      background = new FadingBackgroundSceneStrategy();
+      background.setGreyAlpha(0, 255);
+    }
+    if (!control && alt && !shift && keyCode == 71) { // CTRL + G
+      background = new FadingBackgroundSceneStrategy();
+      background.setGreyAlpha(0, 24);
+    }
+    if (!control && alt && !shift && keyCode == 77) { // CTRL + M
       background = new MatrixBackgroundSceneStrategy(new int[] {25, 50, 100}, 0, -200);
       background.setGreyAlpha(0, 24);
     }
-    if (control && alt && !shift && keyCode == 77) { // CTRL + M
-      // turn off matrix mode
-      background = new FadingBackgroundSceneStrategy();
-      background.setGreyAlpha(0, 24);
+    if (!control && alt && !shift && keyCode == 66) { // CTRL + B
+      background = new FftBarsBackgroundSceneStrategy(fft);
+      background.setGreyAlpha(0, 22);
+    }
+    if (!control && alt && !shift && keyCode == 80) { // CTRL + P
+      background = new FftSquaresBackgroundSceneStrategy(fft);
+      background.setGreyAlpha(0, 40);
+    }
+    if (!control && alt && !shift && keyCode == 82) { // CTRL + R
+      background = new SoundDependentAlphaBackgroundSceneStrategy(fft);
+      background.setGreyAlpha(0, 255);
+    }
+    
+    // behaviour control
+    if (control && !alt && !shift && keyCode == 83) { // CTRL + S
+      // turn on changing strategies
+      changeStrategies = true;
+    }
+    if (control && alt && !shift && keyCode == 83) { // CTRL + ALT + S
+      // turn off changing strategies
+      changeStrategies = false;
+    }
+    if (control && !alt && shift && keyCode == 83) { // CTRL + SHIFT + S
+      // change strategy immediately
+      newStrategy();
+    }
+    if (control && !alt && shift && keyCode == 84) { // CTRL + SHIFT + T
+      // change strategy and text immediately
+      standardRandomRokkEbol();
+      newStrategy();
     }
     if (control && alt && !shift && keyCode == 76) { // CTRL + ALT + L
       flipLsdOption();

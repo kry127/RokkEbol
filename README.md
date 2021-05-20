@@ -3,6 +3,24 @@
 Hello 👋
 This repository contains Processing java code for background of live performance on PolyRock'21.
 
+## Shortcuts
+### Background control
+* `ALT + D` -- turn on default background without traces
+* `ALT + G` -- turn on default background with traces
+* `ALT + R` -- turn on sound reactive background (more traces when loud)
+* `ALT + M` -- change background to matrix background (floating up-down letters)
+* `ALT + B` -- change background to frequency bars background
+* `ALT + P` -- change background to sound reactive disco plates background
+
+### Behaviour control
+* `CTRL + S` -- allow changing strategies with time (hardcoded 25 seconds)
+* `CTRL + ALT + S` -- disallow changing strategies with time
+* `CTRL + SHIFT + S` -- new random strategy
+* `CTRL + SHIFT + T` -- new random text with new random strategy. Text may be repeated.
+* `CTRL + ALT + L` -- override LSD mode on/off
+* `CTRL + LEFT` -- +5 bpm speed up tempo of scene (now only LSD depends on tempo)
+* `CTRL + RIGHT` -- -5 bpm slow down tempo of scene (now only LSD depends on tempo)
+
 ## TODO
 
 - [x] OxyPub and PolyRock logo on scenes
